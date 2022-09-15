@@ -34,7 +34,7 @@ class ApiTx {
   /// Send tx, [params] will be ignored if we have [rawParam].
   /// [onStatusChange] is a callback when tx status change.
   /// @return txHash [string] if tx finalized success.
-  Future<Map> signAndSend(
+  Future<Map?> signAndSend(
     TxInfoData txInfo,
     List params,
     String password, {
@@ -50,9 +50,9 @@ class ApiTx {
       param,
       password,
       onStatusChange ?? (status) => print(status),
-    ) as FutureOr<Map<dynamic, dynamic>>);
-    if (res['error'] != null) {
-      throw Exception(res['error']);
+    ));
+    if (res?['error'] != null) {
+      throw Exception(res?['error']);
     }
     return res;
   }

@@ -35,6 +35,27 @@ async function connect(nodes: string[]) {
     try {
       const res = await ApiPromise.create({
         provider: wsProvider,
+        types:{
+          AccountInfo: "AccountInfoWithTripleRefCount",
+          Address: "AccountId",
+          LookupSource: "AccountId",
+          Keys: "SessionKeys2",
+          Weight: "u32",
+          Difficulty: "u256",
+          DifficultyAndTimestamp: {
+            difficulty: "Difficulty",
+            timestamp: "u64",
+          },
+          LockParameters: {
+            period: "u16",
+            divide: "u16",
+          },
+          StorageVersion: {
+            _enum: ["V0", "V1"],
+            V0: "u8",
+            V1: "u8",
+          },
+        },
         metadata: {
           [`${KUSAMA_GENESIS}-9122`]: localMetadata["kusama"],
           [`${POLKADOT_GENESIS}-9122`]: localMetadata["polkadot"],

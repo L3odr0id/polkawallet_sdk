@@ -36,10 +36,10 @@ async function connect(nodes: string[]) {
       const res = await ApiPromise.create({
         provider: wsProvider,
         types:{
-          "AccountInfo": "AccountInfoWithDualRefCount",
-          "Address": "AccountId",
-          "LookupSource": "AccountId",
-          "Weight": "u32"
+          AccountInfo: "AccountInfoWithDualRefCount",
+          Address: "AccountId",
+          LookupSource: "AccountId",
+          Weight: "u32"
         },
         metadata: {
           [`${KUSAMA_GENESIS}-9122`]: localMetadata["kusama"],

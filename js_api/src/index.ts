@@ -37,8 +37,8 @@ async function connect(nodes: string[]) {
         provider: wsProvider,
         types:{
           AccountInfo: "AccountInfoWithDualRefCount",
-          Address: "AccountId",
-          LookupSource: "AccountId",
+          Address: "MultiAddress",
+          LookupSource: "MultiAddress",
           Weight: "u32"
         },
         metadata: {

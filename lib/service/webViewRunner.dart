@@ -132,7 +132,7 @@ class WebViewRunner {
           }
         },
         onLoadError: (controller, url, code, message) {
-          print("webview restart");
+          print("webview restart. Error: $message");
           _web = null;
           launch(null,
               jsCode: jsCode,

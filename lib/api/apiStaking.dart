@@ -34,8 +34,7 @@ class ApiStaking {
       return {};
     }
     final res = Map<String?, AccountBondedInfo>();
-    final List data =
-        await (service.queryBonded(pubKeys) as FutureOr<List<dynamic>>);
+    final List data = await (service.queryBonded(pubKeys)) ?? [];
     data.forEach((e) {
       res[e[0]] = AccountBondedInfo(e[0], e[1], e[2]);
     });
@@ -43,8 +42,7 @@ class ApiStaking {
   }
 
   Future<OwnStashInfoData> queryOwnStashInfo(String accountId) async {
-    final Map data = await (service.queryOwnStashInfo(accountId)
-        as FutureOr<Map<dynamic, dynamic>>);
+    final Map data = await (service.queryOwnStashInfo(accountId)) ?? {};
     return OwnStashInfoData.fromJson(
         Map<String, dynamic>.of(data as Map<String, dynamic>));
   }

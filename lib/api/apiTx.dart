@@ -16,9 +16,12 @@ class ApiTx {
       {String? rawParam, String? jsApi}) async {
     final String param = rawParam != null ? rawParam : jsonEncode(params);
     final Map tx = txInfo.toJson();
-    final res = await (service.estimateFees(tx, param, jsApi: jsApi)
-        as FutureOr<Map<dynamic, dynamic>>);
-    return TxFeeEstimateResult.fromJson(res as Map<String, dynamic>);
+    final res = (await (service.estimateFees(tx, param, jsApi: jsApi))) ?? {};
+
+    final Map<String, dynamic> resTyped =
+        res.map((key, value) => MapEntry(key.toString(), value));
+
+    return TxFeeEstimateResult.fromJson(resTyped);
   }
 
 //  Future<dynamic> _testSendTx() async {

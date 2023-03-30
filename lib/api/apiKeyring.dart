@@ -121,13 +121,17 @@ class ApiKeyring {
     await updatePubKeyAddressMap(keyring);
     updateIndicesMap(keyring, [acc['address']]);
 
-    return KeyPairData.fromJson(acc as Map<String, dynamic>);
+    final Map<String, dynamic> resTyped =
+        acc.map((key, value) => MapEntry(key.toString(), value));
+
+    return KeyPairData.fromJson(resTyped);
   }
 
   /// Add a contact.
   Future<KeyPairData> addContact(Keyring keyring, Map acc) async {
-    final pubKey = await (service!.serviceRoot.account
-        .decodeAddress([acc['address']]) as FutureOr<Map<dynamic, dynamic>>);
+    final pubKey = (await (service!.serviceRoot.account
+            .decodeAddress([acc['address']]))) ??
+        {};
     acc['pubKey'] = pubKey.keys.toList()[0];
 
     // save keystore to storage

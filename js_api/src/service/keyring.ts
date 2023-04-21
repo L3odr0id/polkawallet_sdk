@@ -278,16 +278,16 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
 
     try {
       keyPair.decodePkcs8(password);
+      tx.signAndSend(keyPair, { tip: txInfo.tip }, onStatusChange)
+        .then((res) => {
+          unsub = res;
+        })
+        .catch((err) => {
+          resolve({ error: err.message });
+        });
     } catch (err) {
       resolve({ error: "password check failed" });
     }
-    tx.signAndSend(keyPair, { tip: txInfo.tip }, onStatusChange)
-      .then((res) => {
-        unsub = res;
-      })
-      .catch((err) => {
-        resolve({ error: err.message });
-      });
   });
 }
 

@@ -14,6 +14,7 @@ class WebViewRunner {
   Map<String, Completer> _msgCompleters = {};
   Map<String, Function> _reloadHandlers = {};
   Map<String, String> _msgJavascript = {};
+  List<void Function(String)> _listOfHandlers = [];
   int _evalJavascriptUID = 0;
 
   bool webViewLoaded = false;
@@ -83,6 +84,10 @@ class WebViewRunner {
             socketDisconnectedAction();
           }
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
+
+          for (final handler in _listOfHandlers) {
+            handler(message.message);
+          }
 
           try {
             var msg = jsonDecode(message.message);
@@ -284,5 +289,9 @@ class WebViewRunner {
 
   void unsubscribeReloadAction(String reloadKey) {
     _reloadHandlers.remove(reloadKey);
+  }
+
+  void addGlobalHandler(void Function(String) onMessage) {
+    _listOfHandlers.add(onMessage);
   }
 }

@@ -55,6 +55,8 @@ class ApiTx {
       param,
       password,
       onStatusChange ?? (status) => print(status),
+      msgIdCallback: msgIdCallback,
+      uidCallback: uidCallback,
     );
     if (res?['error'] != null) {
       throw Exception(res?['error']);

@@ -177,7 +177,7 @@ async function txFeeEstimate(api: ApiPromise, txInfo: any, paramList: any[]) {
   return dispatchInfo;
 }
 
-function _extractEvents(api: ApiPromise, result: SubmittableResult) {
+function _extractEvents(api: ApiPromise, result: SubmittableResult, msgId: string) {
   if (!result || !result.events) {
     return {};
   }
@@ -191,12 +191,12 @@ function _extractEvents(api: ApiPromise, result: SubmittableResult) {
         const [dispatchError] = (data as unknown) as ITuple<[DispatchError]>;
         error = _getDispatchError(dispatchError);
 
-        (<any>window).send("txUpdateEvent", {
+        (<any>window).send("{\"type\": \"txUpdateEvent\", \"msgId\": \""+msgId+"\"}", {
           title: `${section}.${method}`,
           message: error,
         });
       } else {
-        (<any>window).send("txUpdateEvent", {
+        (<any>window).send("{\"type\": \"txUpdateEvent\", \"msgId\": \""+msgId+"\"}", {
           title: `${section}.${method}`,
           message: "ok",
         });
@@ -244,7 +244,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
     let unsub = () => {};
     const onStatusChange = (result: SubmittableResult) => {
       if (result.status.isInBlock || result.status.isFinalized) {
-        const { success, error } = _extractEvents(api, result);
+        const { success, error } = _extractEvents(api, result, msgId);
         if (success) {
           resolve({ hash: tx.hash.toString(), blockHash: (result.status.asInBlock || result.status.asFinalized).toHex() });
         }
@@ -281,6 +281,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
       tx.signAndSend(keyPair, { tip: txInfo.tip }, onStatusChange)
         .then((res) => {
           unsub = res;
+          (<any>window).send(msgId, res);
         })
         .catch((err) => {
           resolve({ error: err.message });

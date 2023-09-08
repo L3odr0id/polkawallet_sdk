@@ -42,6 +42,8 @@ class ApiTx {
     List params,
     String password, {
     Function(String)? onStatusChange,
+    Function(String)? msgIdCallback,
+    Function(String)? uidCallback,
     String? rawParam,
   }) async {
     final param = rawParam != null ? rawParam : jsonEncode(params);

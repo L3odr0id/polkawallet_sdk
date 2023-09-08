@@ -25,10 +25,12 @@ class ServiceTx {
 //    return c.future;
 //  }
 
-  Future<Map?> signAndSend(Map txInfo, String params, password,
-      Function(String) onStatusChange) async {
+  Future<Map?> signAndSend(
+      Map txInfo, String params, password, Function(String) onStatusChange,
+      {Function(String)? msgIdCallback, Function(String)? uidCallback}) async {
     final msgId =
         "onStatusChange${serviceRoot.webView!.getEvalJavascriptUID()}";
+    msgIdCallback?.call(msgId);
     serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
     final code =
         'keyring.sendTx(api, ${jsonEncode(txInfo)}, $params, "$password", "$msgId")';

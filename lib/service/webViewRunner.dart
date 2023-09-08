@@ -178,6 +178,7 @@ class WebViewRunner {
     String code, {
     bool wrapPromise = true,
     bool allowRepeat = true,
+    Function(String)? uidCallback,
   }) async {
     // check if there's a same request loading
     if (!allowRepeat) {
@@ -202,6 +203,8 @@ class WebViewRunner {
     final jsCall = code.split('(');
     final method = 'uid=$uid;${jsCall[0]}';
     _msgCompleters[method] = c;
+
+    uidCallback?.call(uid.toString());
 
     final script = '$code.then(function(res) {'
         '  console.log(JSON.stringify({ path: "$method", data: res }));'

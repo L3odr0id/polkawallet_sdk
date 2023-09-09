@@ -191,12 +191,12 @@ function _extractEvents(api: ApiPromise, result: SubmittableResult, msgId: strin
         const [dispatchError] = (data as unknown) as ITuple<[DispatchError]>;
         error = _getDispatchError(dispatchError);
 
-        (<any>window).send("{\"type\": \"txUpdateEvent\", \"msgId\": \""+msgId+"\"}", {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
           title: `${section}.${method}`,
           message: error,
         });
       } else {
-        (<any>window).send("{\"type\": \"txUpdateEvent\", \"msgId\": \""+msgId+"\"}", {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
           title: `${section}.${method}`,
           message: "ok",
         });

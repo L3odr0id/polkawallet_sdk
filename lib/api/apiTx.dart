@@ -42,6 +42,7 @@ class ApiTx {
     List params,
     String password, {
     Function(String)? onStatusChange,
+    Function(String)? msgIdCallback,
     String? rawParam,
   }) async {
     final param = rawParam != null ? rawParam : jsonEncode(params);
@@ -53,6 +54,7 @@ class ApiTx {
       param,
       password,
       onStatusChange ?? (status) => print(status),
+      msgIdCallback: msgIdCallback,
     );
     if (res?['error'] != null) {
       throw Exception(res?['error']);

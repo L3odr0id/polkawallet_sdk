@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/service/localServer.dart';
+import 'package:polkawallet_sdk/utils/web_logs_handler.dart';
 
 class WebViewRunner {
   HeadlessInAppWebView? _web;
@@ -14,6 +15,7 @@ class WebViewRunner {
   Map<String, Completer> _msgCompleters = {};
   Map<String, Function> _reloadHandlers = {};
   Map<String, String> _msgJavascript = {};
+  List<WebLogsHandler> _listOfHandlers = [];
   int _evalJavascriptUID = 0;
 
   bool webViewLoaded = false;
@@ -83,6 +85,10 @@ class WebViewRunner {
             socketDisconnectedAction();
           }
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
+
+          for (final handler in _listOfHandlers) {
+            handler.handle(message.message);
+          }
 
           try {
             var msg = jsonDecode(message.message);
@@ -284,5 +290,13 @@ class WebViewRunner {
 
   void unsubscribeReloadAction(String reloadKey) {
     _reloadHandlers.remove(reloadKey);
+  }
+
+  void addGlobalHandler(WebLogsHandler logsHandler) {
+    _listOfHandlers.add(logsHandler);
+  }
+
+  void removeGlobalHandler(WebLogsHandler logsHandler) {
+    _listOfHandlers.remove(logsHandler);
   }
 }

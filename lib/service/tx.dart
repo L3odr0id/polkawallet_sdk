@@ -40,4 +40,49 @@ class ServiceTx {
 
     return res;
   }
+
+  Future<Map?> sendMultiTxSingleSender({
+    required Map<dynamic, dynamic> txInfo,
+    required List<List<String>> params,
+    required String password,
+    required Function(String) onStatusChange,
+    required Function(String) msgIdCallback,
+  }) async {
+    final msgId =
+        "onStatusChange${serviceRoot.webView!.getEvalJavascriptUID()}";
+    msgIdCallback.call(msgId);
+    serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
+    final encodedTx = jsonEncode(txInfo);
+    final encodedParams = jsonEncode(params);
+    final code =
+        'keyring.sendMultiTxSingleSender(api, $encodedTx, $encodedParams, "$password", "$msgId")';
+
+    final dynamic res = await serviceRoot.webView!.evalJavascript(code);
+    serviceRoot.webView!.removeMsgHandler(msgId);
+
+    return res;
+  }
+
+  Future<Map?> sendMultiTxMultiSender({
+    required List<Map<dynamic, dynamic>> txInfos,
+    required List<List<String>> params,
+    required List<String> passwords,
+    required Function(String) onStatusChange,
+    required Function(String) msgIdCallback,
+  }) async {
+    final msgId =
+        "onStatusChange${serviceRoot.webView!.getEvalJavascriptUID()}";
+    msgIdCallback.call(msgId);
+    serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
+    final encodedTx = jsonEncode(txInfos);
+    final encodedParams = jsonEncode(params);
+    final encodedPasswords = jsonEncode(passwords);
+    final code =
+        'keyring.sendMultiTxMultiSender(api, $encodedTx, $encodedParams, $encodedPasswords, "$msgId")';
+
+    final dynamic res = await serviceRoot.webView!.evalJavascript(code);
+    serviceRoot.webView!.removeMsgHandler(msgId);
+
+    return res;
+  }
 }

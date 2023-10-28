@@ -47,13 +47,59 @@ class ApiTx {
   }) async {
     final param = rawParam != null ? rawParam : jsonEncode(params);
     final Map tx = txInfo.toJson();
-    print(tx);
-    print(param);
+    // print(tx);
+    // print(param);
     final res = await service.signAndSend(
       tx,
       param,
       password,
       onStatusChange ?? (status) => print(status),
+      msgIdCallback: msgIdCallback,
+    );
+    if (res?['error'] != null) {
+      throw Exception(res?['error']);
+    }
+    return res ?? {};
+  }
+
+  /// Send batch
+  Future<Map> sendMultiTxSingleSender({
+    required TxInfoData txInfo,
+    required List<List<String>> params,
+    required String password,
+    required Function(String) onStatusChange,
+    required Function(String) msgIdCallback,
+  }) async {
+    final Map tx = txInfo.toJson();
+
+    final res = await service.sendMultiTxSingleSender(
+      txInfo: tx,
+      params: params,
+      password: password,
+      onStatusChange: onStatusChange,
+      msgIdCallback: msgIdCallback,
+    );
+    if (res?['error'] != null) {
+      throw Exception(res?['error']);
+    }
+    return res ?? {};
+  }
+
+  /// Send multiple transactions
+  Future<Map> sendMultiTxMultiSender({
+    required List<TxInfoData> txInfos,
+    required List<List<String>> params,
+    required List<String> passwords,
+    required Function(String) onStatusChange,
+    required Function(String) msgIdCallback,
+  }) async {
+    final List<Map<dynamic, dynamic>> txInfosMap =
+        txInfos.map((e) => e.toJson()).toList();
+    final res = await service.sendMultiTxMultiSender(
+      txInfos: txInfosMap,
+      params: params,
+      passwords: passwords,
+      onStatusChange: onStatusChange,
       msgIdCallback: msgIdCallback,
     );
     if (res?['error'] != null) {

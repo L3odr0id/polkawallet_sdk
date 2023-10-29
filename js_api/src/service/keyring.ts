@@ -312,7 +312,8 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
           resolve({ error });
         }
       } else {
-        (<any>window).send(msgId, result.status.type);
+        console.log('log '+mId+' '+msgId+' '+result.status.type);
+        (<any>window).send(mId, result.status.type);
       }
     };
 

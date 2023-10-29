@@ -329,6 +329,7 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
         let keyPair: KeyringPair = keyring.getPair(hexToU8a(info.sender.pubKey));
         try {
           keyPair.decodePkcs8(password);
+          console.log('decodePkcs8 '+msgId[i]);
         } catch (err) {
           resolve({ error: "password check failed" });
         }
@@ -342,8 +343,9 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
                 paramList: paramList,
                 tip: info.tip,
                 mId: msgId[i]
-              },
+            },
         );
+        console.log('Add '+msgId[i]+' to transactions');
       }
     } catch (err) {
       resolve({ error: JSON.stringify(err) });
@@ -352,6 +354,7 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
     try {
       // Создайте пакет транзакций
       const batch = transactions.map(({ sender, module, call,paramList, tip, mId  }) => {
+        console.log('mId='+mId);
         return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId));
       });
   

@@ -298,12 +298,12 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
 /*
   Batch transactions with many senders
 */
-function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any[], passwords: string[], msgId: string) {
+function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any[], passwords: string[], msgId: string[]) {
   return new Promise(async (resolve) => {
 
-    const onStatusChange = (result: SubmittableResult) => {
+    const onStatusChange = (mId: string) => (result: SubmittableResult) => {
       if (result.status.isInBlock || result.status.isFinalized) {
-        const { success, error } = _extractEvents(api, result, msgId);
+        const { success, error } = _extractEvents(api, result, mId);
 
         if (success) {
           resolve({ blockHash: (result.status.asInBlock || result.status.asFinalized).toHex() });
@@ -340,6 +340,7 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
                 call: info.call,
                 paramList: paramList,
                 tip: info.tip,
+                mId: msgId[i]
               },
         );
       }
@@ -349,8 +350,8 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
   
     try {
       // Создайте пакет транзакций
-      const batch = transactions.map(({ sender, module, call,paramList, tip  }) => {
-        return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange);
+      const batch = transactions.map(({ sender, module, call,paramList, tip, mId  }) => {
+        return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId));
       });
   
       // Отправьте пакет транзакций

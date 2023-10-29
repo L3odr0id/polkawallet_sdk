@@ -299,8 +299,10 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
   Batch transactions with many senders
 */
 function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any[], passwords: string[], msgId: string[]) {
+  console.log('start sendMultiTxMultiSender '+txInfos+' '+paramLists+' '+passwords+' '+msgId);
   return new Promise(async (resolve) => {
-
+    
+    console.log('1');
     const onStatusChange = (mId: string) => (result: SubmittableResult) => {
       if (result.status.isInBlock || result.status.isFinalized) {
         const { success, error } = _extractEvents(api, result, mId);
@@ -316,24 +318,32 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
         (<any>window).send(mId, result.status.type);
       }
     };
-
+    console.log('2');
     let transactions = [];
+    console.log('3');
     try {
       for(let i=0; i<txInfos.length; i++){
+        console.log('4');
         let info = txInfos[i];
+        console.log('5 info= '+info);
         let password = passwords[i];
+        console.log('6 pass= '+password);
         let paramList = paramLists[i];
+        console.log('7 paramList= '+paramList);
         // !!txInfo.txHex is false
         // let tx: SubmittableExtrinsic<"promise"> = api.tx[info.module][info.call](...paramList);
         // !txInfo.proxy is true
         let keyPair: KeyringPair = keyring.getPair(hexToU8a(info.sender.pubKey));
+        console.log('8 keyPair= '+keyPair);
         try {
+          console.log('9');
           keyPair.decodePkcs8(password);
-          console.log('decodePkcs8 '+msgId[i]);
+          // console.log('decodePkcs8 '+msgId[i]);
         } catch (err) {
+          console.log('10');
           resolve({ error: "password check failed" });
         }
-        
+        console.log('11');
         // Add transaction
         transactions.push(
           {
@@ -345,18 +355,22 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
                 mId: msgId[i]
             },
         );
+        console.log('12');
         console.log('Add '+msgId[i]+' to transactions');
       }
     } catch (err) {
+      console.log('13');
       resolve({ error: JSON.stringify(err) });
     }
-  
+    console.log('14');
     try {
+      console.log('15');
       // Создайте пакет транзакций
       const batch = transactions.map(({ sender, module, call,paramList, tip, mId  }) => {
         console.log('mId='+mId);
         return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId));
       });
+      console.log('16');
   
       // Отправьте пакет транзакций
       const txResults = await Promise.all(batch);

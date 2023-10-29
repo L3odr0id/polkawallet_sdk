@@ -101,6 +101,9 @@ class ServiceTx {
     final msgIdMap = responseMap(txInfoMetas);
     msgIdCallback?.call(msgIdMap);
 
+    final msgId = msgIdMap.values.first;
+    serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
+
     final txInfos = txInfoMetas.first.txInfo().toJson();
     final params = txInfoMetas.map((e) => e.params().paramsToSend()).toList();
     final encodedTx = jsonEncode(txInfos);
@@ -111,7 +114,7 @@ class ServiceTx {
         'keyring.sendMultiTxMultiSender(api, $encodedTx, $encodedParams, $encodedPasswords, $msgIds)';
 
     final dynamic res = await serviceRoot.webView!.evalJavascript(code);
-    // serviceRoot.webView!.removeMsgHandler(msgId);
+    serviceRoot.webView!.removeMsgHandler(msgId);
 
     return res;
   }

@@ -277,7 +277,11 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
     }
 
     try {
-      keyPair.decodePkcs8(password);
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "password check failed" });
+      }
       tx.signAndSend(keyPair, { tip: txInfo.tip }, onStatusChange)
         .then((res) => {
           unsub = res;
@@ -286,7 +290,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
           resolve({ error: err.message });
         });
     } catch (err) {
-      resolve({ error: "password check failed" });
+      resolve({ error: JSON.stringify(err) });
     }
   });
 }
@@ -322,7 +326,11 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
         // let tx: SubmittableExtrinsic<"promise"> = api.tx[info.module][info.call](...paramList);
         // !txInfo.proxy is true
         let keyPair: KeyringPair = keyring.getPair(hexToU8a(info.sender.pubKey));
-        keyPair.decodePkcs8(password);
+        try {
+          keyPair.decodePkcs8(password);
+        } catch (err) {
+          resolve({ error: "password check failed" });
+        }
         
         // Add transaction
         transactions.push(
@@ -336,7 +344,7 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
         );
       }
     } catch (err) {
-      resolve({ error: "password check failed" });
+      resolve({ error: JSON.stringify(err) });
     }
   
     try {
@@ -395,7 +403,11 @@ function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[]
 
     // Send all
     try {
-      keyPair.decodePkcs8(password);
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "password check failed" });
+      }
       api.tx.utility
       .batch(txs)
       .signAndSend(keyPair,{ tip: txInfo.tip }, onStatusChange).then((res) => {
@@ -405,7 +417,7 @@ function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[]
         resolve({ error: err.message });
       });
     } catch (err) {
-      resolve({ error: "password check failed" });
+      resolve({ error: JSON.stringify(err) });
     }
   });
 }

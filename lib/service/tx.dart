@@ -104,7 +104,7 @@ class ServiceTx {
     final msgId = msgIdMap.values.first;
     serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
 
-    final txInfos = txInfoMetas.first.txInfo().toJson();
+    final txInfos = txInfoMetas.map((e) => e.txInfo().toJson()).toList();
     final params = txInfoMetas.map((e) => e.params().paramsToSend()).toList();
     final encodedTx = jsonEncode(txInfos);
     final encodedParams = jsonEncode(params);

@@ -370,7 +370,13 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
 
       // Создайте пакет транзакций
       const batch = transactions.map(({ sender, module, call,paramList, tip, mId  }) => {
-        return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId));
+        return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId)).catch((err) => {
+          (<any>window).send('txUpdateEvent|msgId='+msgId, {
+            title: 'error',
+            message: err.message,
+          });
+          resolve({ error: err.message });
+        });
       });
   
       // Отправьте пакет транзакций
@@ -439,6 +445,10 @@ function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[]
         unsub = res;
       })
       .catch((err) => {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          title: 'error',
+          message: err.message,
+        });
         resolve({ error: err.message });
       });
     } catch (err) {

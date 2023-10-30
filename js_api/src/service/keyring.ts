@@ -278,7 +278,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
 
     try {
       try {
-        // keyPair.decodePkcs8(password);
+        keyPair.decodePkcs8(password);
       } catch (err) {
         (<any>window).send('txUpdateEvent|msgId='+msgId, {
           title: 'error',
@@ -330,16 +330,18 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
         (<any>window).send(mId, result.status.type);
       }
     };
-
+    console.log('1');
     let transactions = [];
       for(let i = 0; i < txInfos.length; i++){
+        console.log('2');
         let info = txInfos[i];
+        console.log('3 '+info.module+' '+info.call+' '+msgId[i]);
         let password = passwords[i];
         let paramList = paramLists[i];
-        // !!txInfo.txHex is false
-        // let tx: SubmittableExtrinsic<"promise"> = api.tx[info.module][info.call](...paramList);
-        // !txInfo.proxy is true
+        
+        
         let keyPair: KeyringPair = keyring.getPair(hexToU8a(info.sender.pubKey));
+        console.log('4 '+keyPair);
         try {
           keyPair.decodePkcs8(password);
 
@@ -354,11 +356,15 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
                   mId: msgId[i]
               },
           );
+          console.log('5');
         } catch (err) {
+          console.log('6');
           (<any>window).send('txUpdateEvent|msgId='+msgId[i], {
+            title: 'error',
             message: 'password check failed',
           });
           resolve({ error: "password check failed" });
+          return;
         }
 
       }
@@ -367,6 +373,7 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
 
       // Создайте пакет транзакций
       const batch = transactions.map(({ sender, module, call,paramList, tip, mId  }) => {
+        console.log('7');
         return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId));
       });
   
@@ -423,6 +430,9 @@ function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[]
       try {
         keyPair.decodePkcs8(password);
       } catch (err) {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          message: 'password check failed',
+        });
         resolve({ error: "password check failed" });
         return;
       }

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:polkawallet_sdk/api/api.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
+import 'package:polkawallet_sdk/p3d/tx_info.dart';
 import 'package:polkawallet_sdk/service/tx.dart';
 
 class ApiTx {
@@ -37,23 +38,62 @@ class ApiTx {
   /// Send tx, [params] will be ignored if we have [rawParam].
   /// [onStatusChange] is a callback when tx status change.
   /// @return txHash [string] if tx finalized success.
-  Future<Map> signAndSend(
-    TxInfoData txInfo,
-    List params,
-    String password, {
-    Function(String)? onStatusChange,
-    Function(String)? msgIdCallback,
-    String? rawParam,
+  Future<Map> signAndSend({
+    required TransferTxInfoI txInfo,
+    required String password,
+    required Function(String) onStatusChange,
+    required MsgCallback msgIdCallback,
   }) async {
-    final param = rawParam != null ? rawParam : jsonEncode(params);
-    final Map tx = txInfo.toJson();
-    print(tx);
-    print(param);
+    // final param = rawParam != null ? rawParam : jsonEncode(params);
+    // final Map tx = txInfo.toJson();
+    // print(tx);
+    // print(param);
     final res = await service.signAndSend(
-      tx,
-      param,
-      password,
-      onStatusChange ?? (status) => print(status),
+      txInfoMeta: txInfo,
+      password: password,
+      onStatusChange: onStatusChange,
+      msgIdCallback: msgIdCallback,
+    );
+    if (res?['error'] != null) {
+      throw Exception(res?['error']);
+    }
+    return res ?? {};
+  }
+
+  /// Send batch
+  Future<Map> sendMultiTxSingleSender({
+    required List<TransferTxInfoI> txInfoMetas,
+    required String password,
+    required Function(String) onStatusChange,
+    required MsgCallback msgIdCallback,
+  }) async {
+    // final Map tx = txInfo.toJson();
+
+    final res = await service.sendMultiTxSingleSender(
+      txInfoMetas: txInfoMetas,
+      password: password,
+      onStatusChange: onStatusChange,
+      msgIdCallback: msgIdCallback,
+    );
+    if (res?['error'] != null) {
+      throw Exception(res?['error']);
+    }
+    return res ?? {};
+  }
+
+  /// Send multiple transactions
+  Future<Map> sendMultiTxMultiSender({
+    required List<TransferTxInfoI> txInfoMetas,
+    required List<String> passwords,
+    required Function(String) onStatusChange,
+    required MsgCallback msgIdCallback,
+  }) async {
+    // final List<Map<dynamic, dynamic>> txInfosMap =
+    //     txInfos.map((e) => e.toJson()).toList();
+    final res = await service.sendMultiTxMultiSender(
+      txInfoMetas: txInfoMetas,
+      passwords: passwords,
+      onStatusChange: onStatusChange,
       msgIdCallback: msgIdCallback,
     );
     if (res?['error'] != null) {

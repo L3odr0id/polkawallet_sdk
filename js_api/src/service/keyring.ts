@@ -277,16 +277,182 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
     }
 
     try {
-      keyPair.decodePkcs8(password);
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          title: 'error',
+          message: 'password check failed',
+        });
+        resolve({ error: "password check failed" });
+        return;
+      }
+      
       tx.signAndSend(keyPair, { tip: txInfo.tip }, onStatusChange)
-        .then((res) => {
-          unsub = res;
-        })
-        .catch((err) => {
+      .then((res) => {
+        unsub = res;
+      })
+      .catch((err) => {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          title: 'error',
+          message: err.message,
+        });
+        resolve({ error: err.message });
+      });
+    } catch (err) {
+      (<any>window).send('txUpdateEvent|msgId='+msgId, {
+        title: 'error',
+        message: JSON.stringify(err),
+      });
+      resolve({ error: JSON.stringify(err) });
+    }
+    
+  });
+}
+
+/*
+  Batch transactions with many senders
+*/
+function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any[], passwords: string[], msgId: string[]) {
+  console.log('start sendMultiTxMultiSender '+txInfos+' '+paramLists+' '+passwords+' '+msgId);
+  return new Promise(async (resolve) => {
+    const onStatusChange = (mId: string) => (result: SubmittableResult) => {
+      if (result.status.isInBlock || result.status.isFinalized) {
+        const { success, error } = _extractEvents(api, result, mId);
+
+        if (success) {
+          resolve({ blockHash: (result.status.asInBlock || result.status.asFinalized).toHex() });
+        }
+        if (error) {
+          resolve({ error });
+        }
+      } else {
+        (<any>window).send(mId, result.status.type);
+      }
+    };
+    let transactions = [];
+      for(let i = 0; i < txInfos.length; i++){
+        let info = txInfos[i];
+        // console.log('3 '+info.module+' '+info.call+' '+msgId[i]);
+        let password = passwords[i];
+        let paramList = paramLists[i];
+        
+        
+        let keyPair: KeyringPair = keyring.getPair(hexToU8a(info.sender.pubKey));
+        try {
+          keyPair.decodePkcs8(password);
+
+          // Add transaction
+          transactions.push(
+            {
+                  sender: keyPair,
+                  module: info.module,
+                  call: info.call,
+                  paramList: paramList,
+                  tip: info.tip,
+                  mId: msgId[i]
+              },
+          );
+          (<any>window).send('txUpdateEvent|msgId='+msgId[i], {
+            title: 'verbose',
+            message: 'added to transactions',
+          });
+        } catch (err) {
+          (<any>window).send('txUpdateEvent|msgId='+msgId[i], {
+            title: 'error',
+            message: 'password check failed',
+          });
+        }
+
+      }
+
+    try {
+
+      // Создайте пакет транзакций
+      const batch = transactions.map(({ sender, module, call,paramList, tip, mId  }) => {
+        return api.tx[module][call](...paramList).signAndSend(sender,{ tip:tip }, onStatusChange(mId)).catch((err) => {
+          (<any>window).send('txUpdateEvent|msgId='+msgId, {
+            title: 'error',
+            message: err.message,
+          });
           resolve({ error: err.message });
         });
+      });
+  
+      // Отправьте пакет транзакций
+      const txResults = await Promise.all(batch);
+  
+      console.log('Success|MultiSenderBatch|msgId='+msgId);
+    } catch (error) {
+      console.error('Error|MultiSenderBatch|msgId='+msgId, error);
+    }
+  });
+}
+
+/*
+  Batch transactions with one sender
+*/
+function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[], password: string, msgId: string) {
+  return new Promise(async (resolve) => {
+
+    let unsub = () => {};
+    const onStatusChange = (result: SubmittableResult) => {
+      if (result.status.isInBlock || result.status.isFinalized) {
+        const { success, error } = _extractEvents(api, result, msgId);
+
+        if (success) {
+          resolve({ blockHash: (result.status.asInBlock || result.status.asFinalized).toHex() });
+        }
+        if (error) {
+          resolve({ error });
+        }
+        unsub();
+      } else {
+        (<any>window).send(msgId, result.status.type);
+      }
+    };
+
+    // list of transactions
+    let txs = [];
+    
+    for(let i=0; i<paramLists.length; i++){
+      let paramList = paramLists[i];
+      // !!txInfo.txHex is false
+      let tx: SubmittableExtrinsic<"promise"> = api.tx[txInfo.module][txInfo.call](...paramList);
+    
+      // Add transaction
+      txs.push(tx);
+    }
+
+    // !txInfo.proxy is true
+    let keyPair: KeyringPair = keyring.getPair(hexToU8a(txInfo.sender.pubKey));
+
+    // Send all
+    try {
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          message: 'password check failed',
+        });
+        resolve({ error: "password check failed" });
+        return;
+      }
+
+      api.tx.utility
+      .batch(txs)
+      .signAndSend(keyPair,{ tip: txInfo.tip }, onStatusChange).then((res) => {
+        unsub = res;
+      })
+      .catch((err) => {
+        (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          title: 'error',
+          message: err.message,
+        });
+        resolve({ error: err.message });
+      });
     } catch (err) {
-      resolve({ error: "password check failed" });
+      resolve({ error: JSON.stringify(err) });
     }
   });
 }
@@ -410,6 +576,8 @@ export default {
   recover,
   txFeeEstimate,
   sendTx,
+  sendMultiTxMultiSender,
+  sendMultiTxSingleSender,
   checkPassword,
   changePassword,
   checkDerivePath,

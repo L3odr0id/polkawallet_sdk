@@ -9,6 +9,7 @@ import 'package:polkawallet_sdk/service/gov.dart';
 import 'package:polkawallet_sdk/service/gov2.dart';
 import 'package:polkawallet_sdk/service/keyring.dart';
 import 'package:polkawallet_sdk/service/parachain.dart';
+import 'package:polkawallet_sdk/service/poscan.dart';
 import 'package:polkawallet_sdk/service/recovery.dart';
 import 'package:polkawallet_sdk/service/setting.dart';
 import 'package:polkawallet_sdk/service/staking.dart';
@@ -24,6 +25,7 @@ class SubstrateService {
   late ServiceSetting setting;
   late ServiceAccount account;
   late ServiceTx tx;
+  late ServicePoScan poScan;
 
   late ServiceStaking staking;
   late ServiceGov gov;
@@ -58,6 +60,7 @@ class SubstrateService {
     assets = ServiceAssets(this);
     bridge = ServiceBridge(this);
     recovery = ServiceRecovery(this);
+    poScan = ServicePoScan(this);
 
     walletConnect = ServiceWalletConnect(this);
     eth = ServiceEth(this);

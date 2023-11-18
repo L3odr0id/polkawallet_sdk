@@ -3,6 +3,7 @@ import { subscribeMessage, getNetworkConst, getNetworkProperties } from "./servi
 import keyring from "./service/keyring";
 import account from "./service/account";
 import staking from "./service/staking";
+import poScan from "./service/poScan";
 import wc from "./service/walletconnect";
 import { renderEthereumRequests, signEthPayload } from "./service/walletconnect/v1/engines/ethereum";
 import gov from "./service/gov";
@@ -106,6 +107,7 @@ const settings = {
 (<any>window).gov2 = gov2;
 (<any>window).parachain = parachain;
 (<any>window).assets = assets;
+(<any>window).poScan = poScan;
 (<any>window).eth = {
   settings: { connect: connectEVM },
   keyring: { ...keyringETH, signEthRequest: signEthPayload, renderEthRequest: renderEthereumRequests },

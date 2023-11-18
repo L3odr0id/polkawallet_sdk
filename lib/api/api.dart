@@ -7,6 +7,7 @@ import 'package:polkawallet_sdk/api/apiGov.dart';
 import 'package:polkawallet_sdk/api/apiGov2.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:polkawallet_sdk/api/apiParachain.dart';
+import 'package:polkawallet_sdk/api/apiPoscan.dart';
 import 'package:polkawallet_sdk/api/apiRecovery.dart';
 import 'package:polkawallet_sdk/api/apiSetting.dart';
 import 'package:polkawallet_sdk/api/apiStaking.dart';
@@ -33,6 +34,7 @@ class PolkawalletApi {
     setting = ApiSetting(this, service.setting);
     account = ApiAccount(this, service.account);
     tx = ApiTx(this, service.tx);
+    poscan = ApiPoScan(this, service.poScan);
 
     staking = ApiStaking(this, service.staking);
     gov = ApiGov(this, service.gov);
@@ -54,6 +56,7 @@ class PolkawalletApi {
   late ApiSetting setting;
   late ApiAccount account;
   late ApiTx tx;
+  late ApiPoScan poscan;
 
   late ApiStaking staking;
   late ApiGov gov;

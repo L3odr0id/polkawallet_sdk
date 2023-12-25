@@ -13,6 +13,11 @@ import { DispatchError } from "@polkadot/types/interfaces";
 import account from "./account";
 let keyring = new Keyring({ ss58Format: 0, type: "sr25519" });
 
+
+export function getKeyring(): Keyring {
+  return keyring;
+}
+
 /**
  * Generate a set of new mnemonic.
  */

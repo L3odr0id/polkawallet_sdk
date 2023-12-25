@@ -12,6 +12,7 @@ import 'package:polkawallet_sdk/api/apiRecovery.dart';
 import 'package:polkawallet_sdk/api/apiSetting.dart';
 import 'package:polkawallet_sdk/api/apiStaking.dart';
 import 'package:polkawallet_sdk/api/apiTx.dart';
+import 'package:polkawallet_sdk/api/apiUniversal.dart';
 import 'package:polkawallet_sdk/api/apiWalletConnect.dart';
 import 'package:polkawallet_sdk/api/eth/index.dart';
 import 'package:polkawallet_sdk/api/subscan.dart';
@@ -35,6 +36,7 @@ class PolkawalletApi {
     account = ApiAccount(this, service.account);
     tx = ApiTx(this, service.tx);
     poscan = ApiPoScan(this, service.poScan);
+    universal = ApiUniversal(this, service.universal);
 
     staking = ApiStaking(this, service.staking);
     gov = ApiGov(this, service.gov);
@@ -57,6 +59,7 @@ class PolkawalletApi {
   late ApiAccount account;
   late ApiTx tx;
   late ApiPoScan poscan;
+  late ApiUniversal universal;
 
   late ApiStaking staking;
   late ApiGov gov;

@@ -101,6 +101,7 @@ async function txPutObject(api: ApiPromise, pubKey: string, password: string, ms
             tx.signAndSend(keyPair, { tip: '0' }, onStatusChange)
             .then((res) => {
                 (<any>window).send(msgId, 'goodFinish');
+                resolve({'finish': 'ok'});
             })
             .catch((err) => {
                 fastLogError(msgId, err.message);

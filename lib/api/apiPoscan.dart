@@ -19,6 +19,7 @@ class ApiPoScan {
     required int nApprovals,
     required List<String> hashes,
     required List<PropValue>? propValue,
+    required Function(String) msgIdCallback,
   }) async {
     return service.putObject(
       pubKey: pubKey,
@@ -29,6 +30,7 @@ class ApiPoScan {
       hashes: hashes,
       propValue: propValue,
       onStatusChange: onStatusChange,
+      msgIdCallback: msgIdCallback,
     );
   }
 }

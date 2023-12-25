@@ -18,13 +18,16 @@ class ServicePoScan {
     required int nApprovals,
     required List<String> hashes,
     required List<PropValue>? propValue,
+    required Function(String) msgIdCallback,
   }) async {
     final msgId =
         "onStatusChange${serviceRoot.webView!.getEvalJavascriptUID()}";
     serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
 
+    msgIdCallback(msgId);
+
     final argCat = jsonEncode(category);
-    final argFile = file.toList().join('');
+    final argFile = file.toList().map((e) => e.toRadixString(16)).join('');
 
     // final hashesToHex = hashes.map((e) => '0x' + e);
     // final hexHashesStr = hashesToHex.join(',');

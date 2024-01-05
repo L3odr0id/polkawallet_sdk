@@ -14,7 +14,7 @@ class ServicePoScan {
     required String password,
     required Map<String, String> category,
     required Function(String) onStatusChange,
-    required Uint8List file,
+    required String file,
     required int nApprovals,
     required List<String> hashes,
     required List<PropValue>? propValue,
@@ -27,7 +27,7 @@ class ServicePoScan {
     msgIdCallback(msgId);
 
     final argCat = jsonEncode(category);
-    final argFile = file.toList().map((e) => e.toRadixString(16)).join('');
+    // final argFile = file.toList().map((e) => e.toRadixString(16)).join(''); // 0x$argFile
 
     // final hashesToHex = hashes.map((e) => '0x' + e);
     // final hexHashesStr = hashesToHex.join(',');
@@ -38,7 +38,7 @@ class ServicePoScan {
 
     final argPropValue = jsonEncode(propValue);
     final res = serviceRoot.webView!.evalJavascript(
-      'poScan.txPutObject(api, "$pubKey", "$password", "$msgId", $argCat, 0x$argFile, $nApprovals, $argHashes, $argPropValue)',
+      'poScan.txPutObject(api, "$pubKey", "$password", "$msgId", $argCat, $file, $nApprovals, $argHashes, $argPropValue)',
     );
     return res;
   }

@@ -15,7 +15,7 @@ class ApiPoScan {
     required String password,
     required Map<String, String> category,
     required Function(String) onStatusChange,
-    required Uint8List file,
+    required String file,
     required int nApprovals,
     required List<String> hashes,
     required List<PropValue>? propValue,

@@ -54,9 +54,6 @@ class ApiTx {
       onStatusChange: onStatusChange,
       msgIdCallback: msgIdCallback,
     );
-    if (res?['error'] != null) {
-      throw Exception(res?['error']);
-    }
     return res ?? {};
   }
 
@@ -75,9 +72,6 @@ class ApiTx {
       onStatusChange: onStatusChange,
       msgIdCallback: msgIdCallback,
     );
-    if (res?['error'] != null) {
-      throw Exception(res?['error']);
-    }
     return res ?? {};
   }
 
@@ -96,9 +90,6 @@ class ApiTx {
       onStatusChange: onStatusChange,
       msgIdCallback: msgIdCallback,
     );
-    if (res?['error'] != null) {
-      throw Exception(res?['error']);
-    }
     return res ?? {};
   }
 }

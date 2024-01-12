@@ -73,7 +73,7 @@ class ServiceTx {
     required Function(String) onStatusChange,
     required MsgCallback msgIdCallback,
   }) async {
-    final msgIdMap = responseMap(txInfoMetas);
+    final msgIdMap = responseMap([txInfoMetas.first]);
     msgIdCallback?.call(msgIdMap);
 
     final msgId = msgIdMap.values.first;

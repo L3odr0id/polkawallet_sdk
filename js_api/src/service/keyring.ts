@@ -289,7 +289,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
           title: 'error',
           message: 'password check failed',
         });
-        resolve({ error: "password check failed" });
+        resolve({ title: 'error', message: 'password check failed', });
         return;
       }
       
@@ -302,14 +302,14 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
           title: 'error',
           message: err.message,
         });
-        resolve({ error: err.message });
+        resolve({ title: 'error', message: err.message,});
       });
     } catch (err) {
       (<any>window).send('txUpdateEvent|msgId='+msgId, {
         title: 'error',
         message: JSON.stringify(err),
       });
-      resolve({ error: JSON.stringify(err) });
+      resolve({ title: 'error', message: JSON.stringify(err),});
     }
     
   });
@@ -319,7 +319,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
   Batch transactions with many senders
 */
 function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any[], passwords: string[], msgId: string[]) {
-  console.log('start sendMultiTxMultiSender '+txInfos+' '+paramLists+' '+passwords+' '+msgId);
+  // console.log('start sendMultiTxMultiSender '+txInfos+' '+paramLists+' '+passwords+' '+msgId);
   return new Promise(async (resolve) => {
     const onStatusChange = (mId: string) => (result: SubmittableResult) => {
       if (result.status.isInBlock || result.status.isFinalized) {
@@ -380,16 +380,16 @@ function sendMultiTxMultiSender(api: ApiPromise, txInfos: any[], paramLists: any
             title: 'error',
             message: err.message,
           });
-          resolve({ error: err.message });
+          resolve({ title: 'error', message: err.message, });
         });
       });
   
       // Отправьте пакет транзакций
       const txResults = await Promise.all(batch);
   
-      console.log('Success|MultiSenderBatch|msgId='+msgId);
+      // console.log('Success|MultiSenderBatch|msgId='+msgId);
     } catch (error) {
-      console.error('Error|MultiSenderBatch|msgId='+msgId, error);
+      // console.error('Error|MultiSenderBatch|msgId='+msgId, error);
     }
   });
 }
@@ -438,9 +438,10 @@ function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[]
         keyPair.decodePkcs8(password);
       } catch (err) {
         (<any>window).send('txUpdateEvent|msgId='+msgId, {
+          title: 'error',
           message: 'password check failed',
         });
-        resolve({ error: "password check failed" });
+        resolve({  title: 'error', message: 'password check failed', });
         return;
       }
 
@@ -454,10 +455,10 @@ function sendMultiTxSingleSender(api: ApiPromise, txInfo: any, paramLists: any[]
           title: 'error',
           message: err.message,
         });
-        resolve({ error: err.message });
+        resolve({  title: 'error', message: err.message, });
       });
     } catch (err) {
-      resolve({ error: JSON.stringify(err) });
+      resolve({ title: 'error', message: JSON.stringify(err) });
     }
   });
 }

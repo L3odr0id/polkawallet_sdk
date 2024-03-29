@@ -8,22 +8,32 @@ import { ITuple } from "@polkadot/types/types";
 import { DispatchError } from "@polkadot/types/interfaces";
 import { getKeyring } from "./keyring"
 
+let caller = (args, obj) => {
+    return args.reduce((acc, arg) => {
+        return acc[arg]
+    }, obj)
+}
 
-async function unversalNoSign(api: ApiPromise, first: string, second: string, third: string, args: any) {
+async function unversalNoSign(api: ApiPromise, calls: string[], args: any) {
     return new Promise(async (resolve) => {
 
-        let tx = api[first][second][third];
+        let tx = caller(calls, api);
+        var res: any
 
         try {
             if (args == null){
-                let res = await tx();
-                resolve(res.toHuman())
-            }else{
-                let res = await tx(...args);
-                resolve(res.toHuman())
+                res = await tx();
+            } else {
+                res = await tx(...args);
             }
         } catch (err) {
             resolve({ error: JSON.stringify(err) });
+        }
+
+        try {
+            resolve(res.toHuman())
+        } catch (err) {
+            resolve(res)
         }
     });
 }
@@ -87,7 +97,7 @@ function _extractEvents(api: ApiPromise, result: SubmittableResult, msgId: strin
     return { success, error };
   }
 
-async function unversalSign(api: ApiPromise, msgId: string, pubKey: string, password: string, first: any, second: any, third: any, args: any) {
+async function unversalSign(api: ApiPromise, msgId: string, pubKey: string, password: string, calls: string[], args: any) {
     return new Promise(async (resolve) => {
         const onStatusChange = (result: SubmittableResult) => {
             if (result.status.isInBlock || result.status.isFinalized) {
@@ -114,7 +124,7 @@ async function unversalSign(api: ApiPromise, msgId: string, pubKey: string, pass
             return;
         }
 
-        let tx = api[first][second][third](...args);
+        let tx = caller(calls, api)(...args);
 
         try {
             tx.signAndSend(keyPair, { tip: '0' }, onStatusChange)

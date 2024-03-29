@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:polkawallet_sdk/api/api.dart';
 import 'package:polkawallet_sdk/p3d/prop_value.dart';
 import 'package:polkawallet_sdk/service/poscan.dart';

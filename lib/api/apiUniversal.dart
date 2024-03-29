@@ -8,15 +8,11 @@ class ApiUniversal {
   final ServiceUniversal service;
 
   Future<dynamic> callNoSign({
-    String first = 'query',
-    required String second,
-    required String third,
+    required List<String> calls,
     required List<String>? args,
   }) async {
     return service.callNoSign(
-      first: first,
-      second: second,
-      third: third,
+      calls: calls,
       args: args,
     );
   }
@@ -24,17 +20,13 @@ class ApiUniversal {
   Future<dynamic> callSign({
     required String pubKey,
     required String password,
-    String first = 'query',
-    required String second,
-    required String third,
+    required List<String> calls,
     required List<String>? args,
   }) async {
     return service.callSign(
       pubKey: pubKey,
       password: password,
-      first: first,
-      second: second,
-      third: third,
+      calls: calls,
       args: args,
     );
   }

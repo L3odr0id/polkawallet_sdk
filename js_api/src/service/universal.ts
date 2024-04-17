@@ -97,7 +97,7 @@ function _extractEvents(api: ApiPromise, result: SubmittableResult, msgId: strin
     return { success, error };
   }
 
-async function unversalSign(api: ApiPromise, msgId: string, pubKey: string, password: string, calls: string[], args: any) {
+async function unversalSign(api: ApiPromise, pubKey: string, password: string, msgId: string, calls: string[], args: any) {
     return new Promise(async (resolve) => {
         const onStatusChange = (result: SubmittableResult) => {
             if (result.status.isInBlock || result.status.isFinalized) {

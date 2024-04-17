@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:polkawallet_sdk/p3d/prop_value.dart';
 import 'package:polkawallet_sdk/service/index.dart';
 
 class ServicePoScan {
@@ -16,7 +15,7 @@ class ServicePoScan {
     required String file,
     required int nApprovals,
     required List<String> hashes,
-    required List<PropValue>? propValue,
+    required String? propValue,
     required Function(String) msgIdCallback,
   }) async {
     final msgId =
@@ -35,9 +34,8 @@ class ServicePoScan {
     final pseudoHex = hashes.map((e) => '0x' + e).toList();
     final argHashes = jsonEncode(pseudoHex);
 
-    final argPropValue = jsonEncode(propValue);
     final res = serviceRoot.webView!.evalJavascript(
-      'poScan.txPutObject(api, "$pubKey", "$password", "$msgId", $argCat, $file, $nApprovals, $argHashes, $argPropValue)',
+      'poScan.txPutObject(api, "$pubKey", "$password", "$msgId", $argCat, $file, $nApprovals, $argHashes, $propValue)',
     );
     return res;
   }

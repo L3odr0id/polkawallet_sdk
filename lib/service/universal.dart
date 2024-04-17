@@ -23,16 +23,20 @@ class ServiceUniversal {
     required String pubKey,
     required String password,
     required List<String> calls,
-    required List<String>? args,
+    required String? args,
+     required Function(String) onStatusChange,
+    required Function(String) msgIdCallback,
   }) async {
     final msgId =
         "onStatusChange${serviceRoot.webView!.getEvalJavascriptUID()}";
+    serviceRoot.webView!.addMsgHandler(msgId, onStatusChange);
 
-    final argsEncoded = jsonEncode(args);
+    msgIdCallback(msgId);
+
     final callsEncoded = jsonEncode(calls);
 
     final res = serviceRoot.webView!.evalJavascript(
-      'universal.unversalSign(api, "$pubKey", "$password", "$msgId", $callsEncoded, $argsEncoded)',
+      'universal.unversalSign(api, "$pubKey", "$password", "$msgId", $callsEncoded, $args)',
     );
     return res;
   }

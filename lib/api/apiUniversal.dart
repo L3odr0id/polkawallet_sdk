@@ -21,13 +21,17 @@ class ApiUniversal {
     required String pubKey,
     required String password,
     required List<String> calls,
-    required List<String>? args,
+    required String? args,
+    required Function(String) onStatusChange,
+    required Function(String) msgIdCallback,
   }) async {
     return service.callSign(
       pubKey: pubKey,
       password: password,
       calls: calls,
       args: args,
+      msgIdCallback: msgIdCallback,
+      onStatusChange: onStatusChange,
     );
   }
 }

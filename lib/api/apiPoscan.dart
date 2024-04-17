@@ -1,5 +1,4 @@
 import 'package:polkawallet_sdk/api/api.dart';
-import 'package:polkawallet_sdk/p3d/prop_value.dart';
 import 'package:polkawallet_sdk/service/poscan.dart';
 
 class ApiPoScan {
@@ -16,7 +15,7 @@ class ApiPoScan {
     required String file,
     required int nApprovals,
     required List<String> hashes,
-    required List<PropValue>? propValue,
+    required String? propValue,
     required Function(String) msgIdCallback,
   }) async {
     return service.putObject(

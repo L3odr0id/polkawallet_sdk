@@ -9,12 +9,14 @@ class ApiUniversal {
 
   Future<dynamic> callNoSign({
     required List<String> calls,
-    required List<String>? args,
+    required String? args,
+    required bool sendNullAsArg,
   }) async {
     return service.callNoSign(
-      calls: calls,
-      args: args,
-    );
+        calls: calls,
+        args: args,
+        sendNullAsArg: sendNullAsArg,
+      );
   }
 
   Future<dynamic> callSign({

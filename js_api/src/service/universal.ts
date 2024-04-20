@@ -14,17 +14,21 @@ let caller = (args, obj) => {
     }, obj)
 }
 
-async function unversalNoSign(api: ApiPromise, calls: string[], args: any) {
+async function unversalNoSign(api: ApiPromise, calls: string[], args: any, sendNullAsArg: boolean) {
     return new Promise(async (resolve) => {
 
         let tx = caller(calls, api);
         var res: any
 
         try {
-            if (args == null){
-                res = await tx();
+            if (sendNullAsArg){
+                res = await tx(null);
             } else {
-                res = await tx(...args);
+                if (args == null){
+                    res = await tx();
+                } else {
+                    res = await tx(...args);
+                }
             }
         } catch (err) {
             resolve({ error: JSON.stringify(err) });

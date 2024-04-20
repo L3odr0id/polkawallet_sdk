@@ -10,6 +10,8 @@ class WebViewRunner {
   HeadlessInAppWebView? _web;
   Function? _onLaunched;
 
+  HeadlessInAppWebView? get webInstance => _web;
+
   String? _jsCode;
   Map<String, Function> _msgHandlers = {};
   Map<String, Completer> _msgCompleters = {};

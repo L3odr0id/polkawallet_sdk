@@ -5,6 +5,7 @@ import account from "./service/account";
 import staking from "./service/staking";
 import poScan from "./service/poScan";
 import universal from "./service/universal";
+import pools from "./service/pools";
 import wc from "./service/walletconnect";
 import { renderEthereumRequests, signEthPayload } from "./service/walletconnect/v1/engines/ethereum";
 import gov from "./service/gov";
@@ -110,6 +111,7 @@ const settings = {
 (<any>window).assets = assets;
 (<any>window).poScan = poScan;
 (<any>window).universal = universal;
+(<any>window).pools = pools;
 (<any>window).eth = {
   settings: { connect: connectEVM },
   keyring: { ...keyringETH, signEthRequest: signEthPayload, renderEthRequest: renderEthereumRequests },

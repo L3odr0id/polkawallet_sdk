@@ -6,8 +6,8 @@ async function getPoolReserves(api: ApiPromise, multiLocation: Uint8Array, multi
   // const multiLocation2 = createNativeTokenId(api);
 
   const encodedInput = new Uint8Array(multiLocation.length + multiLocation2.length);
-  encodedInput.set(multiLocation2, 0);
-  encodedInput.set(multiLocation, multiLocation2.length);
+  encodedInput.set(multiLocation, 0);
+  encodedInput.set(multiLocation2, multiLocation.length);
 
   const encodedInputHex = u8aToHex(encodedInput);
 

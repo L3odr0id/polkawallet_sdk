@@ -87,7 +87,7 @@ export const getAssetTokenFromNativeToken = async (
   
     const bool = api.createType("bool", false).toU8a();
   
-    const encodedInputHex = concatAndHexEncodeU8A(multiLocation2, multiLocation1, token2Amount, bool);
+    const encodedInputHex = concatAndHexEncodeU8A(multiLocation1, multiLocation2, token2Amount, bool);
   
     const response = await api.rpc.state.call("AssetConversionApi_quote_price_tokens_for_exact_tokens", encodedInputHex);
   
@@ -111,7 +111,7 @@ export const getAssetTokenFromNativeToken = async (
   
     const encodedInputHex = concatAndHexEncodeU8A(multiLocation1, multiLocation2, token2Amount, bool);
   
-    const response = await api.rpc.state.call("AssetConversionApi_quote_price_tokens_for_exact_tokens", encodedInputHex);
+    const response = await api.rpc.state.call("AssetConversionApi_quote_price_exact_tokens_for_tokens", encodedInputHex);
   
     const decodedAmount2 = api.createType("Option<u128>", response);
   

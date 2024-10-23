@@ -11,7 +11,7 @@ import { getSdkError } from "@walletconnect/utils";
 import { formatJsonRpcError } from "../engines/ethereum";
 import { EIP155_CHAINS, EIP155_MAINNET_CHAINS } from "./data/EIP155Data";
 import { POLKADOT_MAINNET_CHAINS } from "./data/PolkadotData";
-import { WC_PROJECT_ID } from "../../../config.local";
+// import { WC_PROJECT_ID } from "../../../config.local";
 
 export interface IAppState2 {
   loading: boolean;
@@ -62,7 +62,7 @@ class Client2 {
 
     try {
       const signClient = await SignClient.init({
-        projectId: WC_PROJECT_ID,
+        // projectId: WC_PROJECT_ID,
         relayUrl: REGIONALIZED_RELAYER_ENDPOINTS[0].value,
         metadata: {
           name: "Polkawallet",

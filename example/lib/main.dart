@@ -110,9 +110,31 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     final node = NetworkParams();
     node.name = 'Kusama';
-    node.endpoint = 'wss://kusama.api.onfinality.io/public-ws/';
-    node.ss58 = 2;
-    final res = await widget.sdk.api.connectNode(widget.keyring, [node]);
+    node.endpoint = 'wss://rpc.3dpscan.io';
+    node.ss58 = 71;
+    final res = await widget.sdk.api.connectNode(widget.keyring, [
+      node
+    ], {
+      "AccountInfo": "AccountInfoWithTripleRefCount",
+      "Address": "AccountId",
+      "LookupSource": "AccountId",
+      "Keys": "SessionKeys2",
+      "Weight": "u32",
+      "Difficulty": "u256",
+      "DifficultyAndTimestamp": {
+        "difficulty": "Difficulty",
+        "timestamp": "u64",
+      },
+      "LockParameters": {
+        "period": "u16",
+        "divide": "u16",
+      },
+      "StorageVersion": {
+        "_enum": ["V0", "V1"],
+        "V0": "u8",
+        "V1": "u8",
+      },
+    });
     if (res != null) {
       setState(() {
         _apiConnected = true;

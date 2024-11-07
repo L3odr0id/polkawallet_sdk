@@ -205,10 +205,10 @@ packages:
     dependency: transitive
     description:
       name: eip1559
-      sha256: de454d6321bd753eb79116e9ec4f8df20895c2e97f9a3839a032f3a728985516
+      sha256: c2b81ac85f3e0e71aaf558201dd9a4600f051ece7ebacd0c5d70065c9b458004
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.6.2"
   eip55:
     dependency: transitive
     description:
@@ -220,11 +220,12 @@ packages:
   ethers:
     dependency: "direct main"
     description:
-      name: ethers
-      sha256: e7f06c339a04c626c6df73f6c2559a956810a2c1b7fa32a5a6e198a78cd0c9ff
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+3"
+      path: "."
+      ref: "7defa16821fbb529cb4643ddb80481088d42f43e"
+      resolved-ref: "7defa16821fbb529cb4643ddb80481088d42f43e"
+      url: "https://github.com/L3odr0id/ethers.git"
+    source: git
+    version: "0.0.1+5"
   fake_async:
     dependency: transitive
     description:
@@ -340,10 +341,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
+      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.5"
+    version: "1.2.2"
   http_multi_server:
     dependency: transitive
     description:
@@ -572,10 +573,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: db7306cf0249f838d1a24af52b5a5887c5bf7f31d8bb4e827d071dc0939ad346
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.2"
+    version: "3.9.1"
   pool:
     dependency: transitive
     description:
@@ -881,10 +882,10 @@ packages:
     dependency: transitive
     description:
       name: wallet
-      sha256: "2cabf10d4543b95773219fc401b184f8cbb0bba9359883f5ee5b9f2c46b85de3"
+      sha256: bd4156eccab0951a3f0ed8773c7ab3ae6f9e81be8b2e01eff4eb4ec1a28d609d
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.7"
+    version: "0.0.11"
   watcher:
     dependency: transitive
     description:
@@ -893,14 +894,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   web3dart:
     dependency: "direct main"
     description:
       name: web3dart
-      sha256: "0b96223a6b284e3146e65dc842ded139eca68a85c4ab79c5ba1a73284927d3cd"
+      sha256: bebbea9278723cef51d21caf65668860e7547f59114fe9f8af01b873a72ba0e6
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.1"
+    version: "2.7.1"
   web_socket_channel:
     dependency: transitive
     description:

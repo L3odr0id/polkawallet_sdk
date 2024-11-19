@@ -266,11 +266,12 @@ packages:
   flutter_aes_ecb_pkcs5:
     dependency: "direct main"
     description:
-      name: flutter_aes_ecb_pkcs5
-      sha256: "616e42db8aed2975920bec580bd42f16e96c8eea7b3ccc2558724ad50ec324fc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
+      path: "."
+      ref: HEAD
+      resolved-ref: "5a98954213693863fa9d9c2692f3cf9e2ca23712"
+      url: "https://github.com/poka-IT/flutter_aes_ecb_pkcs5.git"
+    source: git
+    version: "0.1.3"
   flutter_inappwebview:
     dependency: "direct main"
     description:
